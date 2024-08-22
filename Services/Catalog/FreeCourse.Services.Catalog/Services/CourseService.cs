@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FreeCourse.Services.Catalog.Services
 {
-    internal class CourseService: ICourseService
+    public class CourseService: ICourseService
     {
         private readonly IMongoCollection<Course> _courseCollection;
         private readonly IMongoCollection<Category> _categoryCollection;
@@ -57,7 +57,7 @@ namespace FreeCourse.Services.Catalog.Services
             {
                 return Response<CourseDto>.Fail("Course not found", 404);
             }
-            course.Category = await _categoryCollection.Find<Category>(x => x.Id == Id).FirstAsync();
+            course.Category = await _categoryCollection.Find<Category>(x => x.Id == course.CategoryId).FirstAsync();
 
             return Response<CourseDto>.Success(_mapper.Map<CourseDto>(course), 200);
         }
@@ -70,7 +70,7 @@ namespace FreeCourse.Services.Catalog.Services
             {
                 foreach (var course in courses)
                 {
-                    course.Category = await _categoryCollection.Find<Category>(x => x.Id == course.Id).FirstAsync();
+                    course.Category = await _categoryCollection.Find<Category>(x => x.Id == course.CategoryId).FirstAsync();
                 }
             }
             else
